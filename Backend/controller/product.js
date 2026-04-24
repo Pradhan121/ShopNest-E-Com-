@@ -74,3 +74,22 @@ exports.deleteProduct = async(req,res)=>{
         })
     }
 }
+
+exports.getSingleProduct = async(req,res)=>{
+    try{
+        const getId = req.params.id
+
+        const singleProduct = await product.findById(getId)
+          res.status(200).json({
+            status: 'Success',
+            message: 'productData fetched successful',
+            data: singleProduct
+        })
+    }
+    catch(err){
+        res.status(401).json({
+            status: 'Fail',
+            message: err.message
+        })
+    }
+}
