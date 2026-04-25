@@ -1,4 +1,4 @@
-const order = require('../models/cart')
+const order = require('../models/order')
 
 exports.createOrder = async(req,res)=>{
     try{
@@ -21,7 +21,7 @@ exports.createOrder = async(req,res)=>{
 
 exports.viewOrder = async(req,res)=>{
     try{
-        const getOrder = await order.find().populate(['userId', 'productId'])
+        const getOrder = await order.find().populate(['userId', 'products.productId'])
          res.status(200).json({
                 status: 'Success',
                 message: 'order data fetched',

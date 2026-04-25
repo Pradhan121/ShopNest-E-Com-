@@ -21,7 +21,7 @@ exports.createCart = async(req,res)=>{
 
 exports.viewCart = async(req,res)=>{
     try{
-        const getCart = await cart.find().populate(['userId', 'productId'])
+        const getCart = await cart.find().populate(['userId', 'items.productId'])
          res.status(200).json({
                 status: 'Success',
                 message: 'Cart data fetched',

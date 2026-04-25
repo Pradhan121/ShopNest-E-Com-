@@ -17,6 +17,9 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Shipped', 'Delivered'],
         default: 'Pending'
-    },
-    createdAt: Date
-})
+    }
+},
+    {
+        timestamps: true  
+    }
+);

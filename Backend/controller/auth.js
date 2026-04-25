@@ -55,10 +55,10 @@ exports.login = async(req,res)=>{
         const user = await auth.findOne({username: req.body.username})
          if(!user)throw new Error('Invalid username');
 
-        const pass = await bcrypt.compare(user.password, req.body.password)
+        const pass = await bcrypt.compare(req.body.password, user.password)
          if(!pass)throw new Error('Invalid password')
 
-        const token = jwt.sign({id: user._id, role: user.role}, SECRET_KEY)
+        const token = jwt.sign({ id: user._id, role: user.role },process.env.SECRET_KEY);
 
         res.status(200).json({
             status: 'Success',
