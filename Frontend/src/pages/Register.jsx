@@ -8,6 +8,7 @@ import LockIcon from "@mui/icons-material/Lock"
 import {Link, useNavigate} from 'react-router-dom'
 import axios from "axios"
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 
 export default function Register() {
     const[userList,setUserList] = useState({
@@ -26,6 +27,14 @@ export default function Register() {
         }),
         onSubmit: (values)=>{
             axios.post('http://localhost:3000/api/register',values)
+            .then(()=>{
+                toast.success('Register successfull')
+                navigate('/')
+                setUserList({
+                    username: '', email: '', password: ''
+                })
+            })
+            .catch((err)=>{console.log(err)})
         }
     })
   return (
