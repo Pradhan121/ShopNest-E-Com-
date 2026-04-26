@@ -6,6 +6,8 @@ import React from 'react'
 import { useState } from 'react'
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function Login() {
     const[userList,setUserList] = useState({
@@ -20,7 +22,14 @@ export default function Login() {
             password: Yup.string().required('Required')
         }),
         onSubmit: (values)=>{
-            
+           axios.post('http://localhost:3000/api/login',values)
+           .then((res)=>{
+             toast.success('Login successfull')
+             localStorage.setItem('token', res.data.token)
+             localStorage.setItem('role', res.data.data.role)
+             navigate('/HomePage')
+           })
+           .catch((err)=>{console.log(err)}) 
         }
     })
   return (
@@ -118,7 +127,7 @@ export default function Login() {
                 Register
             </Button>
            </form>
-        <Link to='/'
+        <Link to='/register'
              style={{
               textDecoration:'none',
               color: "#94a3b8",
