@@ -1,16 +1,35 @@
-import React from 'react'
-import { useState } from 'react';
-import { createContext } from 'react'
+import React, { useEffect, useState, createContext } from 'react'
 
 export const AuthContext = createContext();
 
-export default function AuthProvider({children}) {
-  const[user,setUser] = useState(null)
+export default function AuthProvider({ children }) {
+  const [user, setUser] = useState(null)
+  const [searchBar, setSearchBar] = useState('')
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const role = localStorage.getItem('role')
+
+    if (token && role) {
+      setUser({ token, role })  
+    }
+  }, [])
+
+  const login = (token, role) => {
+    localStorage.setItem('token', token)
+    localStorage.setItem('role', role)
+    setUser({ token, role })
+  }
+
+  const logout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('role')
+    setUser(null)
+  }
+
   return (
-    <>
-      <AuthContext.Provider value={user}>
-           {children}
-      </AuthContext.Provider>
-    </>
+    <AuthContext.Provider value={{ user, login, logout, searchBar, setSearchBar }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
