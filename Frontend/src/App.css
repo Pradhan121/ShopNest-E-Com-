@@ -3,3 +3,27 @@
   padding: 0;
   box-sizing: border-box;
 }
+.product::before{
+  content: '';
+  width: '150px';
+  height: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  --default-color: #444444;
+  background: 
+color-mix(in srgb, var(--default-color), transparent 60%);
+  margin: auto;
+}
+.section-title h2::after{
+    content: '';
+    width: 60px;
+    height: 2px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    background: #47b2e4;
+    margin: auto;
+}

@@ -34,7 +34,7 @@ export default function Register() {
                     username: '', email: '', password: ''
                 })
             })
-            .catch((err)=>{console.log(err)})
+            .catch((err)=>{toast.error(err);console.log(err)})
         }
     })
   return (
@@ -70,6 +70,7 @@ export default function Register() {
               <TextField fullWidth
                 label='UserName'
                 type='text'
+                name='username'
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 error={formik.touched.username && Boolean(formik.errors.username)}
@@ -82,18 +83,23 @@ export default function Register() {
                         color: "#fff",
                         "& fieldset": { borderColor: "#334155" },
                         "&:hover fieldset": { borderColor: "#3B82F6" },
+                        "& .MuiInputLabel-root": { color: "#94a3b8" },
+                        "& .MuiInputAdornment-root": { color: "#3B82F6" },
                     },
                 }}
-            InputProps={{
+            slotProps={{
+              input: {
               startAdornment: (
                 <InputAdornment position="start">
                     <PersonIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
                 </InputAdornment>
               ),
+            } 
             }}/>
               <TextField fullWidth
                 label='Email'
                 type='email'
+                name='email'
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 error={formik.touched.email && Boolean(formik.errors.email)}
@@ -106,18 +112,23 @@ export default function Register() {
                         color: "#fff",
                         "& fieldset": { borderColor: "#334155" },
                         "&:hover fieldset": { borderColor: "#3B82F6" },
+                        "& .MuiInputLabel-root": { color: "#94a3b8" },
+                        "& .MuiInputAdornment-root": { color: "#3B82F6" },
                     },
                 }}
-            InputProps={{
+            slotProps={{
+              input: {
               startAdornment: (
                 <InputAdornment position="start">
                     <EmailIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
                 </InputAdornment>
               ),
+             }
             }}/>
               <TextField fullWidth
                 label='Password'
                 type='password'
+                name='password'
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 error={formik.touched.password && Boolean(formik.errors.password)}
@@ -130,14 +141,18 @@ export default function Register() {
                         color: "#fff",
                         "& fieldset": { borderColor: "#334155" },
                         "&:hover fieldset": { borderColor: "#3B82F6" },
+                        "& .MuiInputLabel-root": { color: "#94a3b8" },
+                        "& .MuiInputAdornment-root": { color: "#3B82F6" },
                     },
                 }}
-            InputProps={{
+            slotProps={{
+              input: {
               startAdornment: (
                 <InputAdornment position="start">
                     <LockIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
                 </InputAdornment>
               ),
+             }
             }}/>
              <Button
                 type="submit"

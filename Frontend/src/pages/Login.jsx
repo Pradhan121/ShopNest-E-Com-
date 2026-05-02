@@ -8,12 +8,17 @@ import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+
 
 export default function Login() {
     const[userList,setUserList] = useState({
         username: "", password: ""
     })
     const navigate = useNavigate();
+
+    const {login} = useContext(AuthContext)
 
     const formik = useFormik({
         initialValues: userList,
@@ -23,13 +28,18 @@ export default function Login() {
         }),
         onSubmit: (values)=>{
            axios.post('http://localhost:3000/api/login',values)
-           .then((res)=>{
-             toast.success('Login successfull')
-             localStorage.setItem('token', res.data.token)
-             localStorage.setItem('role', res.data.data.role)
-             navigate('/HomePage')
+           .then((res) => {
+                login(res.data.token, res.data.data.role)  
+                toast.success('Login successful')
+    
+            if(res.data.data.role === 'admin') {
+                navigate('/AdminDashboard')
+            } 
+            else {
+                navigate('/homePage')
+            }
            })
-           .catch((err)=>{console.log(err)}) 
+            .catch((err)=>{toast.error(err);console.log(err)}) 
         }
     })
   return (
@@ -59,12 +69,13 @@ export default function Login() {
             mb: 3,
            }}
           >
-               Create an account 
+               Welcome Back
           </Typography>
            <form action="" onSubmit={formik.handleSubmit}>
               <TextField fullWidth
                 label='UserName'
                 type='text'
+                name='username'
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 error={formik.touched.username && Boolean(formik.errors.username)}
@@ -79,17 +90,20 @@ export default function Login() {
                         "&:hover fieldset": { borderColor: "#3B82F6" },
                     },
                 }}
-            InputProps={{
+            slotProps={{
+              input: {
               startAdornment: (
                 <InputAdornment position="start">
                     <PersonIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
                 </InputAdornment>
               ),
+             }
             }}/>
               
               <TextField fullWidth
                 label='Password'
                 type='password'
+                name='password'
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 error={formik.touched.password && Boolean(formik.errors.password)}
@@ -104,12 +118,14 @@ export default function Login() {
                         "&:hover fieldset": { borderColor: "#3B82F6" },
                     },
                 }}
-            InputProps={{
+            slotProps={{
+              input: {
               startAdornment: (
                 <InputAdornment position="start">
                     <LockIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
                 </InputAdornment>
               ),
+             }
             }}/>
              <Button
                 type="submit"
@@ -124,7 +140,7 @@ export default function Login() {
                     cursor: "pointer",
                 }}
             >
-                Register
+                Login
             </Button>
            </form>
         <Link to='/register'
@@ -139,7 +155,7 @@ export default function Login() {
          >
           Don't have an account?{" "}
           <span style={{ color: "#60A5FA", cursor: "pointer" }}>
-            Login
+             Register
           </span>
         </Link>          
         </Box>      
