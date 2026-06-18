@@ -19,6 +19,9 @@ export default function Navbar() {
     setAnchorEl(null)
     navigate('/')
   }
+  const handleCart=()=>{
+    navigate('/cart')
+  }
   return (
     <>
     <Box sx={{
@@ -36,7 +39,9 @@ export default function Navbar() {
            padding: "10px 0px", 
         }}>
           
-           <Typography sx={{
+           <Typography 
+             onClick={()=>navigate('/homePage')}
+            sx={{
               color: '#fff',
               fontSize: '18px', 
               fontWeight: 600,
@@ -63,7 +68,7 @@ export default function Navbar() {
           }}
         />
            <Box sx={{ display: "flex", gap: 2, alignItems: 'center'}}>
-              <ShoppingCartIcon sx={{ color: "#fff" }} />
+              <ShoppingCartIcon sx={{ color: "#fff", cursor:'pointer'}} onClick={handleCart}/>
               <IconButton onClick={openMenu}>
                 <Avatar />
               </IconButton>
@@ -82,6 +87,12 @@ export default function Navbar() {
             },
           }}
         >
+          <MenuItem onClick={() => {
+              navigate("/homePage");
+              setAnchorEl(null);
+          }}>
+               Home
+          </MenuItem>
           <MenuItem>My Profile</MenuItem>
           <MenuItem>My Orders</MenuItem>
           <MenuItem>Wishlist</MenuItem>
