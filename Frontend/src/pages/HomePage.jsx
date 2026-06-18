@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Navbar from '../componrnts/Navbar'
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Rating, Typography } from '@mui/material'
 import axios from 'axios'
+import { AuthContext } from '../context/AuthContext'
+import { toast } from 'react-toastify'
+import Footer from '../componrnts/Footer'
 
 export default function HomePage() {
   const[product,setProduct] = useState([])
 
+  const{searchBar} = useContext(AuthContext)
   useEffect(()=>{
     axios.get('http://localhost:3000/api/product')
     .then((res)=>{
@@ -13,10 +17,31 @@ export default function HomePage() {
     })
     .catch((err)=>{console.log(err)})
   },[])
+
+  const addToCart=(productId)=>{
+    axios.post("http://localhost:3000/api/cart", {items: [{ 
+        productId: productId,          
+        quantity: 1        
+      }]    
+    },{headers: {        
+        Authorization: localStorage.getItem('token')      
+      }}  
+    )
+    .then(()=>{
+      toast.success('Cart added successful')
+    })
+    .catch((err)=>{console.log(err)})
+  }
+
+  const filteredProduct = product.filter(p =>
+  p.title.toLowerCase().includes(searchBar.toLowerCase())
+)
+
   return (
     <>
       <Navbar/>
-
+  
+          {/* Hero  section*/}
        <Box sx={{
           background: 'linear-gradient(135deg, #020617 0%, #0F172A 50%, #020617 100%)',
           minHeight: '100vh',
@@ -54,12 +79,17 @@ export default function HomePage() {
             </Button>
             </Grid>
              <Grid size={{lg: 6, md: 6, sm: 12, xs: 12}}>
-                <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="" style={{borderRadius: '30%'}}/>
+                <img 
+                   src="https://images.unsplash.com/photo-1607082349566-187342175e2f"
+                  style={{ width: "100%", borderRadius: "12px" }}
+                />
              </Grid>
           </Grid>
          </Box>
          </Container>
        </Box>
+
+        {/* Product section */}
 
       <Box sx={{ padding: "60px 0", background: "#020617" }}>
         <Container maxWidth="lg">
@@ -77,7 +107,7 @@ export default function HomePage() {
           </Typography>
 
     <Grid container spacing={4}>
-      {product.map((item) => (
+      {filteredProduct.map((item) => (
         <Grid size={{lg: 4, md: 6, sm: 6, xs: 12}} key={item._id}> 
           <Card
             sx={{
@@ -149,7 +179,7 @@ export default function HomePage() {
             </CardContent>
 
             <CardActions sx={{ p: 2 }}>
-              <Button
+              <Button onClick={()=>addToCart(item._id)}
                 fullWidth
                 sx={{
                   background: "linear-gradient(90deg,#2563EB,#3B82F6)",
@@ -175,14 +205,28 @@ export default function HomePage() {
   </Container>
       </Box>
 
-      <Box sx={{
-         background: "linear-gradient(90deg,#2563EB,#3B82F6)",
-         color: "#fff"
-      }}>
-         <Container>
-             <Typography>🔥 Flat 50% OFF on Electronics</Typography>
-         </Container>
-      </Box>
+        {/* Offer Banner */}
+
+      <Box
+        sx={{
+        background: "linear-gradient(90deg,#2563EB,#3B82F6)",
+        textAlign: "center",
+        padding: "22px",
+        fontWeight: 600,
+        fontSize: "18px",
+        borderRadius: "12px",
+        maxWidth: "900px",
+        margin: "40px auto",
+        color: "#fff",
+        boxShadow: "0 10px 30px rgba(37,99,235,0.5)",
+        letterSpacing: "0.5px",
+      }}
+    >
+          🔥 Flat 50% OFF on Electronics – Limited Time!
+    </Box>
+
+     {/* Footer */}
+        <Footer/>
     </>
   )
 }

@@ -12,6 +12,12 @@ const orderSchema = new mongoose.Schema({
         },
         quantity: Number
     }],
+    fullName: String,
+    phone: String,
+    address: String,
+    city: String,
+    state: String,
+    pincode: String,
     totalAmount: Number,
     status: {
         type: String,
@@ -23,3 +29,5 @@ const orderSchema = new mongoose.Schema({
         timestamps: true  
     }
 );
+
+module.exports = mongoose.model('Order', orderSchema)

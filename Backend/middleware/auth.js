@@ -27,3 +27,20 @@ exports.adminOnly = (req, res, next) => {
   }
   next();
 };
+
+
+
+// const decoded: any = jwt.verify(
+//           token,
+//           process.env.JWT_SECRET as string
+//         );
+
+//         const adminUser = await User.findById(decoded?.id).select('-password');
+
+//         if (!adminUser) {
+//            return res.status(401).json({ message: 'Admin user not found' });
+//         }
+       
+//         req.user = adminUser;
+//         req.token = token;
+//         return next();

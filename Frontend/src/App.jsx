@@ -3,6 +3,8 @@ import { ToastContainer} from 'react-toastify'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import HomePage from './pages/HomePage'
+import Cart from './pages/Cart'
+import Order from './pages/Order'
 
 function App() {
   return(
@@ -13,6 +15,8 @@ function App() {
               <Route path='/' element={<Login/>}/>
               <Route path='/register' element={<Register/>} />
               <Route path='/homePage' element={<HomePage/>}/>
+              <Route path='/cart' element={<Cart/>}/>
+              <Route path='/order' element={<Order/>}/>
           </Routes>
        </Router>
     </>
