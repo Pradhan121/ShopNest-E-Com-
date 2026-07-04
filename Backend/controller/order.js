@@ -23,28 +23,30 @@ exports.createOrder = async (req, res) => {
         message: "Cart is empty"
       });
     }
+    const validItems = userCart.items.filter(
+  item => item.productId !== null
+);
 
-    const totalAmount = userCart.items.reduce(
-      (acc, item) =>
-        acc + item.productId.price * item.quantity,
-      0
-    );
+   const totalAmount = validItems.reduce(
+  (acc, item) =>
+    acc + Number(item.productId.price) * item.quantity,
+  0
+);
 
     const orderData = await Order.create({
-      userId,
-      products: userCart.items.map(item => ({
-        productId: item.productId._id,
-        quantity: item.quantity
-      })),
-      fullName,
-      phone,
-      address,
-      city,
-      state,
-      pincode,
-      totalAmount
-    });
-
+  userId,
+  products: validItems.map(item => ({
+    productId: item.productId._id,
+    quantity: item.quantity
+  })),
+  fullName,
+  phone,
+  address,
+  city,
+  state,
+  pincode,
+  totalAmount
+});
     // cart clear
     userCart.items = [];
     await userCart.save();
@@ -65,9 +67,11 @@ exports.createOrder = async (req, res) => {
 
 exports.viewOrder = async(req,res)=>{
     try{
-        const getOrder = await order
+        const getOrder = await Order
                .find({ userId: req.user.id })
-               .populate("products.productId");
+               .populate("products.productId")
+               .sort({ createdAt: -1 });
+
          res.status(200).json({
                 status: 'Success',
                 message: 'order data fetched',
@@ -86,7 +90,7 @@ exports.updateOrder = async(req,res)=>{
     try{
         const editId = req.params.id
 
-        const editOrder = await order.findByIdAndUpdate(editId, req.body, {new: true})
+        const editOrder = await Order.findByIdAndUpdate(editId, req.body, {new: true})
         res.status(200).json({
             status: 'Success',
             message: 'OrderData updated successful',
@@ -105,7 +109,7 @@ exports.deleteOrder = async(req,res)=>{
     try{
         const deleteId = req.params.id
 
-        const deleteData = await order.findByIdAndDelete(deleteId)
+        const deleteData = await Order.findByIdAndDelete(deleteId)
         res.status(200).json({
             status: 'Success',
             message: 'orderData deleted successful',
