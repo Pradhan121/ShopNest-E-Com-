@@ -7,6 +7,7 @@ import {
   Container,
   Typography,
   IconButton,
+  CardMedia,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -23,9 +24,9 @@ export default function Cart() {
           Authorization: localStorage.getItem("token"),
         },
       })
-      .then((res) =>{ 
-        console.log("FETCH RESPONSE 👉", res.data.data)
-        setCart(res.data.data)
+      .then((res) => {
+        console.log("FETCH RESPONSE 👉", res.data.data);
+        setCart(res.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -36,46 +37,48 @@ export default function Cart() {
 
   // ✅ update quantity
   const updateQty = (productId, qty) => {
-  if (qty < 1) return;
+    if (qty < 1) return;
 
-  axios.patch("http://localhost:3000/api/cart",
-    {
-      productId: productId,
-      quantity: qty
-    },
-    {
-      headers: {
-        Authorization: localStorage.getItem("token")
-      }
-    }
-  )
-  .then((res) => {
-     console.log("UPDATE RESPONSE 👉", res.data.data) 
-    setCart(res.data.data)
-  })
-  .catch((err) => console.log(err));
-};
+    axios
+      .patch(
+        "http://localhost:3000/api/cart",
+        {
+          productId: productId,
+          quantity: qty,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        },
+      )
+      .then((res) => {
+        console.log("UPDATE RESPONSE 👉", res.data.data);
+        setCart(res.data.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
-// ✅ remove item
-const removeItem = (productId) => {
-  axios.delete("http://localhost:3000/api/cart", {
-    data: {
-      productId: productId
-    },
-    headers: {
-      Authorization: localStorage.getItem("token")
-    }
-  })
-  .then(() => fetchCart())
-  .catch((err) => console.log(err));
-};
+  // ✅ remove item
+  const removeItem = (productId) => {
+    axios
+      .delete("http://localhost:3000/api/cart", {
+        data: {
+          productId: productId,
+        },
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then(() => fetchCart())
+      .catch((err) => console.log(err));
+  };
 
   // ✅ total price
   const total =
     cart?.items?.reduce(
-      (acc, item) =>
-        acc + Number(item?.productId?.price || 0) * item.quantity,
-      0
+      (acc, item) => acc + Number(item?.productId?.price || 0) * item.quantity,
+      0,
     ) || 0;
 
   return (
@@ -90,104 +93,103 @@ const removeItem = (productId) => {
         }}
       >
         <Container maxWidth="md">
-          <Typography
-            sx={{ color: "#fff", fontSize: "26px", mb: 3 }}
-          >
+          <Typography sx={{ color: "#fff", fontSize: "26px", mb: 3 }}>
             My Cart 🛒
           </Typography>
 
           {cart?.items?.length > 0 ? (
             <>
-              {cart.items.map((item) => (
-                <Box
-                  key={item._id}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    mb: 2,
-                    padding: "14px",
-                    border: "1px solid #1E293B",
-                    borderRadius: "12px",
-                    background: "#020617",
-                  }}
-                >
-                  {/* LEFT */}
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <img
-                      src={`http://localhost:3000/images/${item.productId.image}`}
-                      width="80"
-                      style={{ borderRadius: "8px" }}
-                    />
+              {cart.items.map((item) => {
+                // console.log("item ==", item);
+                if (!item?.productId) {
+                  return null;
+                }
 
-                    <Box>
-                      <Typography
-                        sx={{ color: "#fff", fontWeight: 600 }}
-                      >
-                        {item.productId.title}
-                      </Typography>
-
-                      <Typography sx={{ color: "#60A5FA" }}>
-                        ₹ {item.productId.price}
-                      </Typography>
-
-                      {/* Qty Control */}
-                      <Box
+                return (
+                  <Box
+                    key={item._id}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      mb: 2,
+                      padding: "14px",
+                      border: "1px solid #1E293B",
+                      borderRadius: "12px",
+                      background: "#020617",
+                    }}
+                  >
+                    {/* LEFT */}
+                    <Box sx={{ display: "flex", gap: 2 }}>
+                      <CardMedia
+                        component="img"
+                        image={`http://localhost:3000/images/${item.productId.image}`}
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          mt: 1,
+                          width: 80,
+                          height: 80,
+                          borderRadius: "8px",
+                          objectFit: "cover",
                         }}
-                      >
-                        <Button
-                          size="small"
-                          onClick={() =>
-                            updateQty(
-                              item.productId._id,
-                              item.quantity - 1
-                            )
-                          }
-                        >
-                          -
-                        </Button>
-
-                        <Typography sx={{ color: "#fff" }}>
-                          {item.quantity}
+                      />
+                      <Box>
+                        <Typography sx={{ color: "#fff", fontWeight: 600 }}>
+                          {item.productId.title}
                         </Typography>
 
-                        <Button
-                          size="small"
-                          onClick={() =>
-                            updateQty(
-                              item.productId._id,
-                              item.quantity + 1
-                            )
-                          }
+                        <Typography sx={{ color: "#60A5FA" }}>
+                          ₹ {item.productId.price}
+                        </Typography>
+
+                        {/* Qty Control */}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mt: 1,
+                          }}
                         >
-                          +
-                        </Button>
+                          <Button
+                            size="small"
+                            onClick={() =>
+                              updateQty(item.productId._id, item.quantity - 1)
+                            }
+                          >
+                            -
+                          </Button>
+
+                          <Typography sx={{ color: "#fff" }}>
+                            {item.quantity}
+                          </Typography>
+
+                          <Button
+                            size="small"
+                            onClick={() =>
+                              updateQty(item.productId._id, item.quantity + 1)
+                            }
+                          >
+                            +
+                          </Button>
+                        </Box>
                       </Box>
                     </Box>
-                  </Box>
 
-                  {/* RIGHT */}
-                  <Box sx={{ textAlign: "right" }}>
-                    <Typography sx={{ color: "#fff" }}>
-                     ₹ {Number(item?.productId?.price || 0) * item.quantity}
-                    </Typography>
+                    {/* RIGHT */}
+                    <Box sx={{ textAlign: "right" }}>
+                      <Typography sx={{ color: "#fff" }}>
+                        ₹ {Number(item?.productId?.price || 0) * item.quantity}
+                      </Typography>
 
-                    <IconButton
-                      onClick={() =>
-                        removeItem(item.productId._id)
-                      }
-                      sx={{ color: "red" }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                      <IconButton
+                        onClick={() => removeItem(item.productId._id)}
+                        sx={{ color: "red" }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                );
+              })}
 
               {/* TOTAL */}
               <Box
@@ -209,18 +211,19 @@ const removeItem = (productId) => {
                   Total: ₹ {total}
                 </Typography>
 
-                <Link to='/order'
+                <Link
+                  to="/order"
                   style={{
                     display: "flex",
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    justifyContent: "center",
+                    alignItems: "center",
                     marginTop: "16px",
                     background: "linear-gradient(90deg,#2563EB,#3B82F6)",
                     color: "#fff",
                     fontWeight: 600,
                     padding: "10px 20px",
                     textDecoration: "none",
-                    borderRadius: "6px"
+                    borderRadius: "6px",
                   }}
                 >
                   Proceed to Checkout 🚀
@@ -238,9 +241,7 @@ const removeItem = (productId) => {
                 padding: "40px",
               }}
             >
-              <Typography sx={{ fontSize: "50px" }}>
-                🛒
-              </Typography>
+              <Typography sx={{ fontSize: "50px" }}>🛒</Typography>
 
               <Typography
                 sx={{
@@ -266,8 +267,7 @@ const removeItem = (productId) => {
               <Button
                 onClick={() => navigate("/homePage")}
                 sx={{
-                  background:
-                    "linear-gradient(90deg,#2563EB,#3B82F6)",
+                  background: "linear-gradient(90deg,#2563EB,#3B82F6)",
                   color: "#fff",
                 }}
               >

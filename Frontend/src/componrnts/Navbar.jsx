@@ -94,7 +94,10 @@ export default function Navbar() {
                Home
           </MenuItem>
           <MenuItem>My Profile</MenuItem>
-          <MenuItem>My Orders</MenuItem>
+          <MenuItem onClick={()=>{
+              navigate('/myOrder')
+              setAnchorEl(null)
+          }}>My Orders</MenuItem>
           <MenuItem>Wishlist</MenuItem>
           <Divider sx={{ borderColor: "#1E293B" }} />
           <MenuItem>Settings</MenuItem>

@@ -59,12 +59,15 @@ exports.createCart = async (req, res) => {
 exports.viewCart = async (req, res) => {
   try {
     const getCart = await cart
-      .findOne({ userId: req.user.id })   
-      .populate({
-  path: "items.productId",
-  select: "title price image"
-})
+      .findOne({ userId: req.user.id })
+      .populate("items.productId");
 
+    getCart.items = getCart.items.filter(
+      item => item.productId
+    );
+
+    await getCart.save();
+    
     res.status(200).json({
       status: "Success",
       message: "Cart data fetched",

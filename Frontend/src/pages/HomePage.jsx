@@ -5,6 +5,7 @@ import axios from 'axios'
 import { AuthContext } from '../context/AuthContext'
 import { toast } from 'react-toastify'
 import Footer from '../componrnts/Footer'
+import { Link } from 'react-router-dom'
 
 export default function HomePage() {
   const[product,setProduct] = useState([])
@@ -65,9 +66,9 @@ export default function HomePage() {
                 <Typography sx={{ color: '#94a3b8', mt: 2, mb: 3 }}>
                   Shop smart, shop fast with our modern store
                 </Typography>
-                <Button 
+                <Link to='/AllProduct'
                 variant='contained'
-                sx={{
+                style={{
                   background: 'linear-gradient(90deg, #2563EB, #3B82F6)',
                   borderRadius: '8px',
                   mt: 2,
@@ -76,7 +77,7 @@ export default function HomePage() {
                 }}
               >
                   Shop Now
-            </Button>
+            </Link>
             </Grid>
              <Grid size={{lg: 6, md: 6, sm: 12, xs: 12}}>
                 <img 
