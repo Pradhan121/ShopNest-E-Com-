@@ -30,6 +30,8 @@ app.use('/api', require('./routes/auth'))
 app.use('/api', require('./routes/product'))
 app.use('/api', require('./routes/cart'))
 app.use('/api', require('./routes/order'))
+app.use('/api', require('./routes/profile'))
+app.use('/api', require('./routes/wishlist'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

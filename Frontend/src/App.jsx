@@ -9,6 +9,7 @@ import OrderSuccess from "./pages/OrderSuccess";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductDetail from "./pages/ProductDetail";
 import MyOrders from "./pages/MyOrder";
+import MyProfile from "./pages/myProfile";
 
 function App() {
   return (
@@ -70,6 +71,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route 
+            path="/myProfile"
+            element={
+               <ProtectedRoute>
+                   <MyProfile/>
+               </ProtectedRoute>
+            }/>
         </Routes>
       </Router>
     </>
