@@ -265,7 +265,7 @@ export default function Cart() {
               </Typography>
 
               <Button
-                onClick={() => navigate("/homePage")}
+                onClick={() => navigate("/AllProduct")}
                 sx={{
                   background: "linear-gradient(90deg,#2563EB,#3B82F6)",
                   color: "#fff",

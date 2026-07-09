@@ -93,7 +93,10 @@ export default function Navbar() {
           }}>
                Home
           </MenuItem>
-          <MenuItem>My Profile</MenuItem>
+          <MenuItem onClick={()=>{
+              navigate('/myProfile')
+              setAnchorEl(null)
+          }}>My Profile</MenuItem>
           <MenuItem onClick={()=>{
               navigate('/myOrder')
               setAnchorEl(null)
