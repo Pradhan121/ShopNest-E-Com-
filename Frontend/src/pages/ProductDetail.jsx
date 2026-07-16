@@ -23,7 +23,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
-  const { searchBar } = useContext(AuthContext);
+  const { searchBar, getCount } = useContext(AuthContext);
 
   useEffect(() => {
   axios
@@ -73,6 +73,7 @@ export default function ProductDetail() {
       )
       .then(() => {
         toast.success("Cart added successful");
+        getCount();
       })
       .catch((err) => {
         console.log(err);
@@ -83,26 +84,51 @@ export default function ProductDetail() {
     p.title.toLowerCase().includes(searchBar.toLowerCase()),
   );
 
-  const addWishlist = (productId) => {
-    axios
-      .post(
-        "http://localhost:3000/api/wishlist",
-        {
+  const toggleWishlist = (productId) => {
+
+  if (wishlist.includes(productId)) {
+
+    // REMOVE
+    axios.delete(
+      "http://localhost:3000/api/wishlist",
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+        data: {
           productId,
         },
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        },
-      )
-      .then(() => {
-        toast.success("Added to Wishlist ❤️");
+      }
+    )
+    .then(() => {
+      toast.success("Removed from Wishlist");
 
-        setWishlist((prev) => [...prev, productId]);
-      })
-      .catch((err) => console.log(err));
-  };
+      setWishlist(prev =>
+        prev.filter(id => id !== productId)
+      );
+    });
+
+  } else {
+
+    // ADD
+    axios.post(
+      "http://localhost:3000/api/wishlist",
+      { productId },
+      {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    )
+    .then(() => {
+      toast.success("Added to Wishlist ❤️");
+
+      setWishlist(prev => [...prev, productId]);
+    });
+
+  }
+
+};
 
   return (
     <>
@@ -149,7 +175,7 @@ export default function ProductDetail() {
                     }}
                   >
                     <IconButton
-                      onClick={() => addWishlist(item._id)}
+                     onClick={() => toggleWishlist(item._id)}
                       sx={{
                         background: "#fff",
                         "&:hover": {

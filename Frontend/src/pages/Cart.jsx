@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../componrnts/Navbar";
 import {
@@ -11,10 +11,13 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Cart() {
   const navigate = useNavigate();
   const [cart, setCart] = useState(null);
+
+  const{getCount} = useContext(AuthContext)
 
   // ✅ fetch cart
   const fetchCart = () => {
@@ -27,6 +30,7 @@ export default function Cart() {
       .then((res) => {
         console.log("FETCH RESPONSE 👉", res.data.data);
         setCart(res.data.data);
+        getCount();
       })
       .catch((err) => console.log(err));
   };

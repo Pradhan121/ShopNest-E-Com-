@@ -1,4 +1,4 @@
-import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik'
 import PersonIcon from "@mui/icons-material/Person"
 import LockIcon from "@mui/icons-material/Lock"
@@ -10,12 +10,17 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
 
 
 export default function Login() {
     const[userList,setUserList] = useState({
         username: "", password: ""
     })
+    const[showPassword, setPassword] = useState(false)
+
     const navigate = useNavigate();
 
     const {login} = useContext(AuthContext)
@@ -42,6 +47,10 @@ export default function Login() {
             .catch((err)=>{toast.error(err);console.log(err)}) 
         }
     })
+
+  const handleClickPassword=()=>{
+    setPassword((prev) = !prev)
+  }
   return (
     <>
       <Box sx={{
@@ -72,33 +81,57 @@ export default function Login() {
                Welcome Back
           </Typography>
            <form action="" onSubmit={formik.handleSubmit}>
-              <TextField fullWidth
-                label='UserName'
-                type='text'
-                name='username'
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                error={formik.touched.username && Boolean(formik.errors.username)}
-                helperText={formik.touched.username && formik.errors.username}
-                sx={{
-                   mb: 2,
-                  "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        background: "#020617",
-                        color: "#fff",
-                        "& fieldset": { borderColor: "#334155" },
-                        "&:hover fieldset": { borderColor: "#3B82F6" },
-                    },
-                }}
-            slotProps={{
-              input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                    <PersonIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
-                </InputAdornment>
-              ),
-             }
-            }}/>
+              <TextField
+              fullWidth
+              label="UserName"
+              type="text"
+              name="username"
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              error={formik.touched.username && Boolean(formik.errors.username)}
+              helperText={formik.touched.username && formik.errors.username}
+              slotProps={{
+                input:{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon sx={{ color: "#3B82F6" }} />
+                  </InputAdornment>
+                ),
+              }
+              }}
+              sx={{
+                mb: 2,
+
+                "& .MuiInputLabel-root": {
+                  color: "#94A3B8",
+                },
+
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#3B82F6",
+                },
+
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  background: "#020617",
+                  color: "#fff",
+
+                  "& fieldset": {
+                    borderColor: "#334155",
+                  },
+
+                  "&:hover fieldset": {
+                    borderColor: "#3B82F6",
+                  },
+
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#3B82F6",
+                  },
+                },
+
+                "& .MuiInputAdornment-root": {
+                  color: "#3B82F6",
+                },
+              }}/>
               
               <TextField fullWidth
                 label='Password'
@@ -108,25 +141,55 @@ export default function Login() {
                 onChange={formik.handleChange}
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
-                sx={{
-                   mb: 2,
-                  "& .MuiOutlinedInput-root": {
-                        borderRadius: "12px",
-                        background: "#020617",
-                        color: "#fff",
-                        "& fieldset": { borderColor: "#334155" },
-                        "&:hover fieldset": { borderColor: "#3B82F6" },
-                    },
-                }}
-            slotProps={{
-              input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                    <LockIcon sx={{ color: "#3B82F6", paddingLeft: "0" }} />             
-                </InputAdornment>
-              ),
-             }
-            }}/>
+                slotProps={{
+                input:{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon sx={{ color: "#3B82F6" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClickPassword} edge="end">
+                      {showPassword ? <VisibilityOff sx={{color: '#fff'}}/> : <Visibility sx={{color: '#fff'}} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+              }}
+              sx={{
+                mb: 2,
+
+                "& .MuiInputLabel-root": {
+                  color: "#94A3B8",
+                },
+
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#3B82F6",
+                },
+
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "12px",
+                  background: "#020617",
+                  color: "#fff",
+
+                  "& fieldset": {
+                    borderColor: "#334155",
+                  },
+
+                  "&:hover fieldset": {
+                    borderColor: "#3B82F6",
+                  },
+
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#3B82F6",
+                  },
+                },
+
+                "& .MuiInputAdornment-root": {
+                  color: "#3B82F6",
+                },
+              }}/>
              <Button
                 type="submit"
                 style={{

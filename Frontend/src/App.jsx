@@ -10,6 +10,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductDetail from "./pages/ProductDetail";
 import MyOrders from "./pages/MyOrder";
 import MyProfile from "./pages/myProfile";
+import Wishlist from "./pages/Wishlist";
+import Settings from "./pages/Setting";
 
 function App() {
   return (
@@ -78,6 +80,22 @@ function App() {
                    <MyProfile/>
                </ProtectedRoute>
             }/>
+            <Route
+              path="/wishlist"
+              element={
+                <ProtectedRoute>
+                    <Wishlist/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                    <Settings/>
+                </ProtectedRoute>
+              }
+            />
         </Routes>
       </Router>
     </>

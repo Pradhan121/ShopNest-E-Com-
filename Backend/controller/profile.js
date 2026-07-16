@@ -2,6 +2,7 @@ const Auth = require("../models/auth");
 const Order = require("../models/order");
 const Cart = require("../models/cart");
 const Wishlist = require("../models/wishlist");
+const bcrypt = require("bcrypt");
 
 exports.getProfile = async (req, res) => {
     try {
@@ -66,6 +67,50 @@ exports.updateProfile = async (req, res) => {
       status: "Success",
       data: user,
     });
+  } catch (err) {
+    res.status(500).json({
+      status: "Fail",
+      message: err.message,
+    });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await Auth.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        status: "Fail",
+        message: "User not found",
+      });
+    }
+
+    const checkPassword = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!checkPassword) {
+      return res.status(400).json({
+        status: "Fail",
+        message: "Current password is incorrect",
+      });
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashPassword;
+
+    await user.save();
+
+    res.status(200).json({
+      status: "Success",
+      message: "Password changed successfully",
+    });
+
   } catch (err) {
     res.status(500).json({
       status: "Fail",
