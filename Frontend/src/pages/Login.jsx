@@ -49,7 +49,7 @@ export default function Login() {
     })
 
   const handleClickPassword=()=>{
-    setPassword((prev) = !prev)
+    setPassword((prev) => !prev)
   }
   return (
     <>
@@ -135,7 +135,7 @@ export default function Login() {
               
               <TextField fullWidth
                 label='Password'
-                type='password'
+                type={showPassword ? 'text' : 'password'}
                 name='password'
                 value={formik.values.password}
                 onChange={formik.handleChange}
@@ -151,7 +151,7 @@ export default function Login() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClickPassword} edge="end">
-                      {showPassword ? <VisibilityOff sx={{color: '#fff'}}/> : <Visibility sx={{color: '#fff'}} />}
+                      { showPassword ? <VisibilityOff sx={{color: '#fff'}}/> : <Visibility sx={{color: '#fff'}} />}
                     </IconButton>
                   </InputAdornment>
                 ),

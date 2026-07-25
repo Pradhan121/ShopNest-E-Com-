@@ -15,6 +15,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Navbar from "../componrnts/Navbar";
+import { toast } from "react-toastify";
 
 export default function MyProfile() {
   const [user, setUser] = useState({
@@ -56,7 +57,7 @@ export default function MyProfile() {
         },
       })
       .then(() => {
-        alert("Profile Updated Successfully");
+        toast.success("Profile Updated Successfully");
       })
       .catch((err) => console.log(err));
   };
