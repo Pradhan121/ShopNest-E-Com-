@@ -9,7 +9,7 @@ router.patch(
   authCheck,
   profile.changePassword
 );
-router.patch('/profile/:id', authCheck, profile.updateProfile)
+router.patch('/profile', authCheck, profile.updateProfile)
 
 module.exports = router
 
