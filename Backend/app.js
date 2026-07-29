@@ -33,6 +33,8 @@ app.use('/api', require('./routes/order'))
 app.use('/api', require('./routes/profile'))
 app.use('/api', require('./routes/wishlist'))
 
+app.use('/api/admin', require('./routes/admin'))
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

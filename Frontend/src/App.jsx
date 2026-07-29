@@ -12,6 +12,11 @@ import MyOrders from "./pages/MyOrder";
 import MyProfile from "./pages/myProfile";
 import Wishlist from "./pages/Wishlist";
 import Settings from "./pages/Setting";
+import AdminUsers from "./pages/Admin/AdminUsers";
+import AdminLayout from "./componrnts/Admin/AdminLayout";
+import Dashboard from "./pages/Admin/Dashboard";
+import AdminProduct from "./pages/Admin/AdminProduct";
+import Add_EditProduct from "./pages/Admin/Add_EditProduct";
 
 function App() {
   return (
@@ -61,7 +66,7 @@ function App() {
             path="/AllProduct"
             element={
               <ProtectedRoute>
-                 <ProductDetail/>
+                <ProductDetail />
               </ProtectedRoute>
             }
           />
@@ -69,33 +74,46 @@ function App() {
             path="/myOrder"
             element={
               <ProtectedRoute>
-                  <MyOrders/>
+                <MyOrders />
               </ProtectedRoute>
             }
           />
-          <Route 
+          <Route
             path="/myProfile"
             element={
-               <ProtectedRoute>
-                   <MyProfile/>
-               </ProtectedRoute>
-            }/>
-            <Route
-              path="/wishlist"
-              element={
-                <ProtectedRoute>
-                    <Wishlist/>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                    <Settings/>
-                </ProtectedRoute>
-              }
-            />
+              <ProtectedRoute>
+                <MyProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          {/* Admin Panel */}
+          <Route path="/admin/users" element={<AdminUsers />} />
+
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminProduct />} />
+
+            <Route path="dashboard" element={<Dashboard />} />
+
+            <Route path="products/add" element={<Add_EditProduct />} />
+
+            <Route path="products/edit/:id" element={<Add_EditProduct />} />
+          </Route>
         </Routes>
       </Router>
     </>
