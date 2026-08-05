@@ -6,9 +6,9 @@ const Auth = require("../models/auth");
 exports.getUsers = async (req, res) => {
   try {
 
-    const users = await Auth.find()
-      .select("-password")
-      .sort({ createdAt: -1 });
+     const users = await Auth.find({
+      role: "user",
+    }).select("-password");
 
     res.status(200).json({
       status: "Success",
@@ -193,7 +193,7 @@ exports.getOrders = async (req, res) => {
 
     const orders = await Order.find()
       .populate("userId")
-      .populate("items.productId");
+      .populate("products.productId");
 
     res.status(200).json({
       status: "Success",
@@ -201,7 +201,7 @@ exports.getOrders = async (req, res) => {
     });
 
   } catch (err) {
-
+    console.log(err)
     res.status(500).json({
       status: "Fail",
       message: err.message,

@@ -13,9 +13,7 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
