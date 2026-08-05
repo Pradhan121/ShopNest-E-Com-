@@ -2,7 +2,13 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   IconButton,
   InputAdornment,
@@ -19,6 +25,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+  const[open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const openMenu = (e) => setAnchorEl(e.currentTarget);
@@ -27,8 +34,16 @@ export default function Navbar() {
   const { logout, searchBar, setSearchBar, cartCount } = useContext(AuthContext);
 
   const handleLogout = () => {
+    setOpen(true);
+  };
+
+  const handleCloseLogoutDialog = () => {
+    setOpen(false);
+  };
+
+  const confirmLogout = () => {
     logout();
-    setAnchorEl(null);
+    setAnchorEl(null)
     navigate("/");
   };
   const handleCart = () => {
@@ -162,6 +177,23 @@ export default function Navbar() {
             </Box>
           </Box>
         </Container>
+        <Dialog open={open} onClose={handleCloseLogoutDialog}>
+            <DialogTitle sx={{textAlign: 'center', fontSize:'30px'}}>Logout</DialogTitle>
+
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to logout ?
+              </DialogContentText>
+            </DialogContent>
+
+            <DialogActions sx={{justifyContent:'space-evenly'}}>
+              <Button  variant='contained' onClick={handleCloseLogoutDialog}>Cancel</Button>
+
+              <Button color="error" variant="contained" onClick={confirmLogout}>
+                Logout
+              </Button>
+            </DialogActions>
+          </Dialog>
       </Box>
     </>
   );

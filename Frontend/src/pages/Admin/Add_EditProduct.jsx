@@ -6,9 +6,13 @@ import {
   Button,
   TextField,
   Stack,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
+
 
 export default function Add_EditProduct({
   open,
@@ -95,27 +99,57 @@ export default function Add_EditProduct({
     }
   };
 
+  const handleClose = () =>{
+    setOpen(false)
+  }
+
   return (
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
       fullWidth
       maxWidth="sm"
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          p: 1,
+        },
+      }}
     >
-      <DialogTitle>
+      <DialogTitle
+        sx={{
+          textAlign: "center",
+          fontWeight: 700,
+          fontSize: 26,
+        }}
+      >
         {editData ? "Edit Product" : "Add Product"}
       </DialogTitle>
-
+        <IconButton
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "black",
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 30 }} />
+            </IconButton>
       <DialogContent>
-
-        <Stack spacing={2} mt={1}>
-
+        <Stack spacing={3} mt={2}>
           <TextField
             label="Title"
             name="title"
             value={formData.title}
             onChange={handleChange}
             fullWidth
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
           />
 
           <TextField
@@ -124,6 +158,12 @@ export default function Add_EditProduct({
             value={formData.description}
             onChange={handleChange}
             fullWidth
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
             multiline
             rows={3}
           />
@@ -135,6 +175,12 @@ export default function Add_EditProduct({
             value={formData.price}
             onChange={handleChange}
             fullWidth
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
           />
 
           <TextField
@@ -143,6 +189,12 @@ export default function Add_EditProduct({
             value={formData.category}
             onChange={handleChange}
             fullWidth
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
           />
 
           <TextField
@@ -152,6 +204,12 @@ export default function Add_EditProduct({
             value={formData.rating}
             onChange={handleChange}
             fullWidth
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
           />
 
           <TextField
@@ -161,13 +219,24 @@ export default function Add_EditProduct({
             value={formData.stock}
             onChange={handleChange}
             fullWidth
-          />
-
-          <Button
             variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
+          />
+          <Button
             component="label"
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+            sx={{
+              py: 1.5,
+              borderRadius: 2,
+              borderStyle: "dashed",
+            }}
           >
-            Upload Image
+            {image ? image.name : "Upload Product Image"}
 
             <input
               hidden
@@ -176,28 +245,24 @@ export default function Add_EditProduct({
               onChange={(e) => setImage(e.target.files[0])}
             />
           </Button>
-
         </Stack>
-
       </DialogContent>
 
-      <DialogActions>
-
-        <Button
-          onClick={() => setOpen(false)}
-        >
+      <DialogActions
+        sx={{
+          justifyContent: "space-evenly",
+          px: 3,
+          pb: 2,
+        }}
+      >
+        <Button variant="outlined" color="error" onClick={() => setOpen(false)}>
           Cancel
         </Button>
 
-        <Button
-          variant="contained"
-          onClick={saveProduct}
-        >
-          {editData ? "Update" : "Save"}
+        <Button variant="contained" onClick={saveProduct}>
+          {editData ? "Update Product" : "Save Product"}
         </Button>
-
       </DialogActions>
-
     </Dialog>
   );
 }

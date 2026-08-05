@@ -1,5 +1,6 @@
 import {
   Box,
+  Chip,
   FormControl,
   MenuItem,
   Paper,
@@ -28,6 +29,7 @@ export default function AdminOrders() {
         },
       })
       .then((res) => {
+        console.log(res.data);
         setOrders(res.data.data);
       })
       .catch((err) => console.log(err));
@@ -48,7 +50,7 @@ export default function AdminOrders() {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
-        }
+        },
       )
       .then(() => {
         toast.success("Order Updated");
@@ -78,11 +80,8 @@ export default function AdminOrders() {
         }}
       >
         <Table>
-
           <TableHead>
-
             <TableRow>
-
               <TableCell sx={{ color: "#fff", fontWeight: 700 }}>
                 Customer
               </TableCell>
@@ -102,26 +101,18 @@ export default function AdminOrders() {
               <TableCell sx={{ color: "#fff", fontWeight: 700 }}>
                 Status
               </TableCell>
-
             </TableRow>
-
           </TableHead>
 
           <TableBody>
-
             {orders.map((order) => (
-
               <TableRow key={order._id}>
-
                 <TableCell sx={{ color: "#fff" }}>
                   <Typography fontWeight={600}>
                     {order.userId?.username}
                   </Typography>
 
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "#94A3B8" }}
-                  >
+                  <Typography variant="body2" sx={{ color: "#94A3B8" }}>
                     {order.userId?.email}
                   </Typography>
                 </TableCell>
@@ -138,48 +129,44 @@ export default function AdminOrders() {
                   ₹ {order.totalAmount}
                 </TableCell>
 
-                <TableCell sx={{ color: "#fff" }}>
-                  {order.address}
-                </TableCell>
+                <TableCell sx={{ color: "#fff" }}>{order.address}</TableCell>
 
                 <TableCell>
-
                   <FormControl fullWidth size="small">
-
                     <Select
                       value={order.status}
-                      onChange={(e) =>
-                        updateStatus(order._id, e.target.value)
-                      }
+                      onChange={(e) => updateStatus(order._id, e.target.value)}
+                      sx={{
+                        color:
+                          order.status === "Pending"
+                            ? "#F59E0B"
+                            : order.status === "Delivered"
+                              ? "#22C55E"
+                              : order.status === "Cancelled"
+                                ? "#EF4444"
+                                : "#3B82F6",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "#334155",
+                        },
+
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                          borderColor: "#3B82F6",
+                        },
+                        "& .MuiSvgIcon-root": {
+                          color: "#fff",
+                        },
+                      }}
                     >
-                      <MenuItem value="Pending">
-                        Pending
-                      </MenuItem>
-
-                      <MenuItem value="Shipped">
-                        Shipped
-                      </MenuItem>
-
-                      <MenuItem value="Delivered">
-                        Delivered
-                      </MenuItem>
-
-                      <MenuItem value="Cancelled">
-                        Cancelled
-                      </MenuItem>
-
+                      <MenuItem value="Pending">Pending</MenuItem>
+                      <MenuItem value="Shipped">Shipped</MenuItem>
+                      <MenuItem value="Delivered">Delivered</MenuItem>
+                      <MenuItem value="Cancelled">Cancelled</MenuItem>
                     </Select>
-
                   </FormControl>
-
                 </TableCell>
-
               </TableRow>
-
             ))}
-
           </TableBody>
-
         </Table>
       </TableContainer>
     </>

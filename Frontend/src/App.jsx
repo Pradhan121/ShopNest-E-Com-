@@ -17,6 +17,8 @@ import AdminLayout from "./componrnts/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminProduct from "./pages/Admin/AdminProduct";
 import Add_EditProduct from "./pages/Admin/Add_EditProduct";
+import AdminOrders from "./pages/Admin/AdminOrder";
+import AdminProfile from "./pages/Admin/AdminProfile";
 
 function App() {
   return (
@@ -102,18 +104,24 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           {/* Admin Panel */}
-          <Route path="/admin/users" element={<AdminUsers />} />
-
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminProduct />} />
+    <Route index element={<Dashboard />} />
 
-            <Route path="dashboard" element={<Dashboard />} />
+    <Route path="dashboard" element={<Dashboard />} />
 
-            <Route path="products/add" element={<Add_EditProduct />} />
+    <Route path="products" element={<AdminProduct />} />
 
-            <Route path="products/edit/:id" element={<Add_EditProduct />} />
-          </Route>
+    <Route path="products/add" element={<Add_EditProduct />} />
+
+    <Route path="products/edit/:id" element={<Add_EditProduct />} />
+
+    <Route path="users" element={<AdminUsers />} />
+
+    <Route path="orders" element={<AdminOrders />} />
+    <Route path="/admin/profile" element={<AdminProfile />} />
+  </Route>
         </Routes>
       </Router>
     </>
