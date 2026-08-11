@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
 
 export default function Add_EditProduct({
@@ -77,7 +78,11 @@ export default function Add_EditProduct({
     }
 
     if (editData) {
-      API.patch(`http://localhost:3000/api/products/${editData._id}`, data)
+      axios.patch(`http://localhost:3000/api/admin/products/${editData._id}`, data,{
+         headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
         .then(() => {
           toast.success("Product Updated");
           fetchProducts();
@@ -87,7 +92,11 @@ export default function Add_EditProduct({
           toast.error(err.response?.data?.message);
         });
     } else {
-      API.post("http://localhost:3000/api/products", data)
+      axios.post("http://localhost:3000/api/admin/products", data,{
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
         .then(() => {
           toast.success("Product Added");
           fetchProducts();
