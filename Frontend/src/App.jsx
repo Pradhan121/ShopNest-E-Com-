@@ -19,12 +19,14 @@ import AdminProduct from "./pages/Admin/AdminProduct";
 import Add_EditProduct from "./pages/Admin/Add_EditProduct";
 import AdminOrders from "./pages/Admin/AdminOrder";
 import AdminProfile from "./pages/Admin/AdminProfile";
+import RouteTransitionLoader from "./componrnts/RouteTransitionLoader";
 
 function App() {
   return (
     <>
       <ToastContainer position="bottom-right" autoClose={2000} />
       <Router>
+        <RouteTransitionLoader>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -123,6 +125,7 @@ function App() {
     <Route path="/admin/profile" element={<AdminProfile />} />
   </Route>
         </Routes>
+        </RouteTransitionLoader>
       </Router>
     </>
   );

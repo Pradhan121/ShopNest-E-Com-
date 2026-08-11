@@ -6,17 +6,24 @@ import { AuthContext } from '../context/AuthContext'
 import { toast } from 'react-toastify'
 import Footer from '../componrnts/Footer'
 import { Link } from 'react-router-dom'
+import DotLoader from '../componrnts/DotLoader'
 
 export default function HomePage() {
   const[product,setProduct] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const{searchBar} = useContext(AuthContext)
+  
   useEffect(()=>{
+    setLoading(true)
     axios.get('http://localhost:3000/api/product')
     .then((res)=>{
       setProduct(res.data.data)
     })
     .catch((err)=>{console.log(err)})
+    .finally(()=>{
+      setLoading(false)
+    })
   },[])
 
   const addToCart=(productId)=>{
@@ -108,7 +115,12 @@ export default function HomePage() {
           </Typography>
 
     <Grid container spacing={4}>
-      {filteredProduct.map((item) => (
+      {loading ? (
+        <Grid size={{xs: 12}}>
+          <DotLoader label="Loading products" sx={{ py: 6 }} />
+        </Grid>
+      ) : (
+        filteredProduct.map((item) => (
         <Grid size={{lg: 4, md: 6, sm: 6, xs: 12}} key={item._id}> 
           <Card
             sx={{
@@ -201,7 +213,8 @@ export default function HomePage() {
 
           </Card>
         </Grid>
-      ))}
+        ))
+      )}
     </Grid>
   </Container>
       </Box>
