@@ -125,7 +125,16 @@ exports.getProducts = async (req, res) => {
 exports.addProduct = async (req, res) => {
   try {
 
-    const product = await Product.create(req.body);
+     const productData = {
+      ...req.body,
+    };
+
+    // image upload hui hai
+    if (req.file) {
+      productData.image = req.file.filename;
+    }
+
+    const product = await Product.create(productData);
 
     res.status(201).json({
       status: "Success",
@@ -145,14 +154,28 @@ exports.addProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
 
+     const updateData = {
+      ...req.body,
+    };
+
+    // Agar new image upload hui hai
+    if (req.file) {
+      updateData.image = req.file.filename;
+    }
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       {
         new: true,
       }
     );
 
+    if (!product) {
+      return res.status(404).json({
+        status: "Fail",
+        message: "Product not found",
+      });
+    }
     res.status(200).json({
       status: "Success",
       data: product,

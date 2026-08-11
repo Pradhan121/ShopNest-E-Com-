@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { Box, Button, CircularProgress, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PeopleIcon from "@mui/icons-material/People";
 import PaymentsIcon from "@mui/icons-material/Payments";
+import DotLoader from "../../componrnts/DotLoader";
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState({
@@ -75,9 +76,10 @@ export default function Dashboard() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        <CircularProgress />
+        <DotLoader label="Loading dashboard" size={10} />
       </Box>
     );
   }
@@ -184,50 +186,66 @@ export default function Dashboard() {
         ))}
       </Grid>
 
-      <Paper
-        sx={{
-          mt: 5,
-          p: 5,
-          borderRadius: 4,
-          background: "linear-gradient(135deg,#111827,#1E293B)",
-          border: "1px solid #334155",
-        }}
-      >
-        <Typography
-          sx={{
-            color: "#fff",
-            fontSize: 28,
-            fontWeight: 700,
-          }}
-        >
-          Welcome Back 👋
-        </Typography>
+     <Paper
+  sx={{
+    mt: 5,
+    p: 5,
+    borderRadius: 4,
+    background: "linear-gradient(135deg,#111827,#1E293B)",
+    border: "1px solid #334155",
+  }}
+>
+  <Typography
+    sx={{
+      color: "#fff",
+      fontSize: 30,
+      fontWeight: 700,
+    }}
+  >
+    Welcome Back 👋
+  </Typography>
 
-        <Typography
-          sx={{
-            mt: 2,
-            color: "#94A3B8",
-            lineHeight: 2,
-            fontSize: 15,
-          }}
-        >
-          Manage products, track orders, monitor users and grow your ShopNest
-          store from a single dashboard.
-        </Typography>
+  <Typography
+    sx={{
+      mt: 2,
+      color: "#94A3B8",
+      fontSize: 16,
+      lineHeight: 1.9,
+      maxWidth: 700,
+    }}
+  >
+    Welcome to the <strong>ShopNest Admin Dashboard</strong>. Use the sidebar to
+    manage products, orders and users. The summary cards above give you a quick
+    overview of your store's performance.
+  </Typography>
 
-        <Box
-          sx={{
-            mt: 4,
-            display: "flex",
-            gap: 2,
-            flexWrap: "wrap",
-          }}
-        >
-          <Button variant="contained">Add Product</Button>
+  <Divider sx={{ my: 4, borderColor: "#334155" }} />
 
-          <Button variant="outlined">View Orders</Button>
-        </Box>
-      </Paper>
+  <Typography
+    sx={{
+      color: "#E2E8F0",
+      fontSize: 18,
+      fontWeight: 600,
+      mb: 2,
+    }}
+  >
+    What's Next?
+  </Typography>
+
+  <Stack spacing={1.5}>
+    <Typography sx={{ color: "#94A3B8" }}>
+      • Manage and update your products from the <strong>Products</strong> section.
+    </Typography>
+
+    <Typography sx={{ color: "#94A3B8" }}>
+      • Process customer orders from the <strong>Orders</strong> section.
+    </Typography>
+
+    <Typography sx={{ color: "#94A3B8" }}>
+      • View and manage registered users from the <strong>Users</strong> section.
+    </Typography>
+  </Stack>
+</Paper>
     </>
   );
 }
