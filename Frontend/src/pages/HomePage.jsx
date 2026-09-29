@@ -16,7 +16,7 @@ export default function HomePage() {
   
   useEffect(()=>{
     setLoading(true)
-    axios.get('http://localhost:3000/api/product')
+    axios.get('http://localhost:3000/api/product?limit=6')
     .then((res)=>{
       setProduct(res.data.data)
     })

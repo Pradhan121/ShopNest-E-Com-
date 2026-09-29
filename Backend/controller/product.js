@@ -21,14 +21,23 @@ exports.createProduct = async(req,res)=>{
 }
 
 exports.viewProduct = async(req,res)=>{
-    try{
-        const getProduct = await product.find()
-        res.status(200).json({
-            status: 'Success',
-            message: 'Product created Successful',
-            data: getProduct
-          })
+    try {
+    const limit = req.query.limit;
+
+    let getProduct;
+
+    if (limit) {
+      getProduct = await product.find().limit(Number(limit));
+    } else {
+      getProduct = await product.find();
     }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Products fetched successfully",
+      data: getProduct
+    });
+  }
     catch(err){
         res.status(401).json({
             status: 'Fail',
