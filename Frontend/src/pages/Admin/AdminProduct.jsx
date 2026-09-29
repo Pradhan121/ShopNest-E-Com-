@@ -71,17 +71,17 @@ export default function AdminProduct() {
   const getProducts = () => {
     setLoading(true);
     axios
-    .get("http://localhost:3000/api/admin/products", {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    })
+      .get("http://localhost:3000/api/admin/products", {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setProducts(res.data.data);
       })
-       .catch((err) => {
+      .catch((err) => {
         console.log(err);
-    })
+      })
       .finally(() => {
         setLoading(false);
       });
@@ -106,22 +106,55 @@ export default function AdminProduct() {
       })
       .catch((err) => {
         console.log(err);
-    })
+        toast.error("Failed to delete product");
+      });
   };
 
-  // const filterProduct = products.filter((item) =>
-  //   item.title.toLowerCase().includes(search.toLowerCase()),
-  // );
+  const categories = [];
+
+  products.forEach((item) => {
+    if (!item.category) return;
+
+    const category = item.category.trim();
+
+    const exists = categories.some(
+      (item) => item.toLowerCase() === category.toLowerCase(),
+    );
+
+    if (!exists) {
+      categories.push(category);
+    }
+  });
 
   const filterProduct = [...products]
     .filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
-    .filter((item) => (category ? item.category === category : true))
+    .filter((item) =>
+      category
+        ? item.category?.trim().toLowerCase() === category.trim().toLowerCase()
+        : true,
+    )
     .filter((item) => (rating ? item.rating >= Number(rating) : true))
     .sort((a, b) => {
-      if (sort === "low") return a.price - b.price;
-      if (sort === "high") return b.price - a.price;
+      const priceA = Number(a.price);
+      const priceB = Number(b.price);
+
+      if (sort === "low") {
+        return priceA - priceB;
+      }
+
+      if (sort === "high") {
+        return priceB - priceA;
+      }
+
       return 0;
     });
+
+  const resetFilters = () => {
+    setSearch("");
+    setCategory("");
+    setRating("");
+    setSort("");
+  };
 
   return (
     <>
@@ -167,16 +200,33 @@ export default function AdminProduct() {
 
         <Grid size={{ xs: 12, md: 3 }}>
           <FormControl fullWidth sx={filterStyle}>
-            <InputLabel>Category</InputLabel>
+            <InputLabel shrink>Category</InputLabel>
             <Select
               value={category}
               label="Category"
+              displayEmpty
               onChange={(e) => setCategory(e.target.value)}
+              renderValue={(selected) => {
+                if (selected === "") {
+                  return "All Categories";
+                }
+
+                return selected;
+              }}
+              sx={{
+                "& .MuiSelect-select": {
+                  color: "#fff",
+                },
+              }}
               MenuProps={{
                 PaperProps: {
                   sx: {
                     bgcolor: "#0F172A",
                     color: "#fff",
+
+                    "& .MuiMenuItem-root": {
+                      color: "#fff",
+                    },
 
                     "& .MuiMenuItem-root:hover": {
                       bgcolor: "#1E293B",
@@ -184,31 +234,69 @@ export default function AdminProduct() {
 
                     "& .Mui-selected": {
                       bgcolor: "#2563EB !important",
+                      color: "#fff !important",
                     },
                   },
                 },
               }}
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="Electronics">Electronics</MenuItem>
-              <MenuItem value="Sportswear">Sportswear</MenuItem>
-              <MenuItem value="Consumer Electronics">
-                Consumer Electronics
-              </MenuItem>
+              <MenuItem value="">All Categories</MenuItem>
+
+              {categories.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
 
         <Grid size={{ xs: 12, md: 2 }}>
           <FormControl fullWidth sx={filterStyle}>
-            <InputLabel>Rating</InputLabel>
+            <InputLabel shrink>Rating</InputLabel>
             <Select
               value={rating}
               label="Rating"
+              displayEmpty
               onChange={(e) => setRating(e.target.value)}
+              renderValue={(select)=>{
+                if(select===''){
+                  return "All Ratings";
+                }
+                return select;
+              }}
+              sx={{
+                "& .MuiSelect-select": {
+                  color: "#fff",
+                },
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    background: "#0F172A",
+                    color: "#fff",
+
+                    "& .MuiMenuItem-root": {
+                      color: "#fff",
+                    },
+
+                    "& .MuiMenuItem-root:hover": {
+                      background: "#1E293B",
+                    },
+
+                    "& .Mui-selected": {
+                      background: "#2563EB !important",
+                    },
+                  },
+                },
+              }}
             >
-              <MenuItem value="">All</MenuItem>
+              <MenuItem value="">All Ratings</MenuItem>
+
+              <MenuItem value="3">3★ & Above</MenuItem>
+
               <MenuItem value="4">4★ & Above</MenuItem>
+
               <MenuItem value="4.5">4.5★ & Above</MenuItem>
             </Select>
           </FormControl>
@@ -216,10 +304,10 @@ export default function AdminProduct() {
 
         <Grid size={{ xs: 12, md: 3 }}>
           <FormControl fullWidth sx={filterStyle}>
-            <InputLabel>Sort Price</InputLabel>
+            <InputLabel>Price</InputLabel>
             <Select
               value={sort}
-              label="Sort Price"
+              label="Price"
               onChange={(e) => setSort(e.target.value)}
             >
               <MenuItem value="">Default</MenuItem>
@@ -229,6 +317,32 @@ export default function AdminProduct() {
           </FormControl>
         </Grid>
       </Grid>
+
+      {(search || category || rating || sort) && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            mb: 2,
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={resetFilters}
+            sx={{
+              color: "#94A3B8",
+              borderColor: "#334155",
+
+              "&:hover": {
+                borderColor: "#3B82F6",
+                color: "#3B82F6",
+              },
+            }}
+          >
+            Reset Filters
+          </Button>
+        </Box>
+      )}
 
       <TableContainer
         component={Paper}
@@ -258,41 +372,41 @@ export default function AdminProduct() {
             ) : (
               filterProduct.map((item) => (
                 <TableRow key={item._id}>
-                <TableCell>
-                  <img
-                    src={`http://localhost:3000/images/${item.image}`}
-                    width="70"
-                    height="70"
-                    style={{
-                      borderRadius: "8px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </TableCell>
+                  <TableCell>
+                    <img
+                      src={`http://localhost:3000/images/${item.image}`}
+                      width="70"
+                      height="70"
+                      style={{
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </TableCell>
 
-                <TableCell sx={{ color: "#fff" }}>{item.title}</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>{item.title}</TableCell>
 
-                <TableCell sx={{ color: "#fff" }}>₹ {item.price}</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>₹ {item.price}</TableCell>
 
-                <TableCell sx={{ color: "#fff" }}>⭐ {item.rating}</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>⭐ {item.rating}</TableCell>
 
-                <TableCell sx={{ color: "#fff" }}>{item.category}</TableCell>
+                  <TableCell sx={{ color: "#fff" }}>{item.category}</TableCell>
 
-                <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      setEditData(item);
-                      setOpen(true);
-                    }}
-                  >
-                    <EditIcon sx={{ color: "#3B82F6" }} />
-                  </IconButton>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => {
+                        setEditData(item);
+                        setOpen(true);
+                      }}
+                    >
+                      <EditIcon sx={{ color: "#3B82F6" }} />
+                    </IconButton>
 
-                  <IconButton onClick={() => deleteProduct(item._id)}>
-                    <DeleteIcon sx={{ color: "red" }} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+                    <IconButton onClick={() => deleteProduct(item._id)}>
+                      <DeleteIcon sx={{ color: "red" }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
               ))
             )}
           </TableBody>

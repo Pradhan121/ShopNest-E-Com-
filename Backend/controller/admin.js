@@ -63,37 +63,67 @@ exports.deleteUser = async (req, res) => {
 
 exports.dashboard = async (req, res) => {
   try {
+    const totalProducts = await Product.countDocuments();
+
+    const totalOrders = await Order.countDocuments();
 
     const totalUsers = await Auth.countDocuments({
       role: "user",
     });
 
-    const totalProducts = await Product.countDocuments();
-
-    const totalOrders = await Order.countDocuments();
-
-    const revenue = await Order.aggregate([
+    const revenueData = await Order.aggregate([
+      {
+        $match: {
+          status: "Delivered",
+        },
+      },
       {
         $group: {
           _id: null,
           total: {
-            $sum: "$totalPrice",
+            $sum: "$totalAmount",
           },
         },
       },
     ]);
 
+    const totalRevenue = revenueData[0]?.total || 0;
+
+    // Recent Users
+    const recentUsers = await Auth.find({
+      role: "user",
+    })
+      .select("username email createdAt")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    // Recent Products
+    const recentProducts = await Product.find()
+      .select("title price category image rating createdAt")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    // Recent Orders
+    const recentOrders = await Order.find()
+      .populate("userId", "username email")
+      .populate("products.productId", "title image")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
     res.status(200).json({
       status: "Success",
+
       data: {
-        totalUsers,
         totalProducts,
         totalOrders,
-        totalRevenue:
-          revenue.length > 0 ? revenue[0].total : 0,
+        totalUsers,
+        totalRevenue,
+
+        recentUsers,
+        recentProducts,
+        recentOrders,
       },
     });
-
   } catch (err) {
     res.status(500).json({
       status: "Fail",

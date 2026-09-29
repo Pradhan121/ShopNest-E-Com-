@@ -7,7 +7,16 @@ export default function RouteTransitionLoader({ children }) {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
+  // Skip loader for Login and Register pages
+  const noLoaderRoutes = ["/", "/register"];
+  const shouldShowLoader = !noLoaderRoutes.includes(location.pathname);
+
   useEffect(() => {
+    if (!shouldShowLoader) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
 
     const timer = window.setTimeout(() => {
@@ -15,11 +24,11 @@ export default function RouteTransitionLoader({ children }) {
     }, 2200);
 
     return () => window.clearTimeout(timer);
-  }, [location.pathname]);
+  }, [location.pathname, shouldShowLoader]);
 
   return (
     <>
-      {isLoading ? (
+      {isLoading && shouldShowLoader ? (
         <Box
           sx={{
             position: "fixed",

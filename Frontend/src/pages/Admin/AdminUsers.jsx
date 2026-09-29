@@ -76,14 +76,29 @@ export default function AdminUsers() {
       </Typography>
 
       <TextField
-        fullWidth
         placeholder="Search User"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         sx={{
           mb: 3,
-          background: "#fff",
-          borderRadius: 2,
+          width: { xs: "100%", sm: "350px" },
+
+          "& .MuiOutlinedInput-root": {
+            backgroundColor: "#fff",
+            borderRadius: 2,
+
+            "& fieldset": {
+              borderColor: "#E2E8F0",
+            },
+
+            "&:hover fieldset": {
+              borderColor: "#94A3B8",
+            },
+
+            "&.Mui-focused fieldset": {
+              borderColor: "#2563EB",
+            },
+          },
         }}
       />
 
@@ -92,53 +107,132 @@ export default function AdminUsers() {
         sx={{
           background: "#0F172A",
           border: "1px solid #1E293B",
+          borderRadius: 2,
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          overflow: "hidden",
         }}
       >
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: "#fff" }}>Username</TableCell>
+              <TableCell
+                sx={{
+                  color: "#94A3B8",
+                  fontWeight: 600,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  width: "25%",
+                }}
+              >
+                Username
+              </TableCell>
 
-              <TableCell sx={{ color: "#fff" }}>Email</TableCell>
+              <TableCell
+                sx={{
+                  color: "#94A3B8",
+                  fontWeight: 600,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  width: "35%",
+                }}
+              >
+                Email
+              </TableCell>
 
-              <TableCell sx={{ color: "#fff" }}>Role</TableCell>
+              <TableCell
+                sx={{
+                  color: "#94A3B8",
+                  fontWeight: 600,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  width: "20%",
+                }}
+              >
+                Role
+              </TableCell>
 
-              <TableCell sx={{ color: "#fff" }}>Action</TableCell>
+              <TableCell
+                sx={{
+                  color: "#94A3B8",
+                  fontWeight: 600,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  width: "20%",
+                }}
+              >
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {filteredUsers.map((user) => (
-              <TableRow key={user._id}>
-                <TableCell sx={{ color: "#fff" }}>{user.username}</TableCell>
+              <TableRow
+                key={user._id}
+                sx={{
+                  transition: "background-color 0.2s ease",
 
-                <TableCell sx={{ color: "#fff" }}>{user.email}</TableCell>
+                  "&:hover": {
+                    backgroundColor: "#172033",
+                  },
+
+                  "&:last-child td": {
+                    borderBottom: 0,
+                  },
+                }}
+              >
+                <TableCell
+                  sx={{
+                    color: "#F8FAFC",
+                    fontWeight: 500,
+                  }}
+                >
+                  {user.username}
+                </TableCell>
+
+                <TableCell
+                  sx={{
+                    color: "#CBD5E1",
+                  }}
+                >
+                  {user.email}
+                </TableCell>
 
                 <TableCell>
                   <Chip
                     label={user.role}
-                    color={user.role === "admin" ? "error" : "primary"}
+                    size="small"
+                    sx={{
+                      backgroundColor:
+                        user.role === "admin" ? "#DC2626" : "#2563EB",
+                      color: "#fff",
+                      fontWeight: 600,
+                      textTransform: "capitalize",
+                      borderRadius: 1.5,
+                    }}
                   />
                 </TableCell>
 
                 <TableCell>
-                  {user.role === "admin" ? (
-                    <Typography
+                   
+                    <IconButton
+                      onClick={() => deleteUser(user._id)}
                       sx={{
-                        color: "#64748B",
+                        color: "#EF4444",
+
+                        "&:hover": {
+                          backgroundColor: "rgba(239, 68, 68, 0.12)",
+                        },
                       }}
                     >
-                      Protected
-                    </Typography>
-                  ) : (
-                    <IconButton onClick={() => deleteUser(user._id)}>
                       <DeleteIcon
                         sx={{
-                          color: "red",
+                          color: "#EF4444",
+                          fontSize: 21,
                         }}
                       />
                     </IconButton>
-                  )}
+                  
                 </TableCell>
               </TableRow>
             ))}
